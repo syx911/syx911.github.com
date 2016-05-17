@@ -1,94 +1,47 @@
-var path = require('path');
-var fs = require('fs');
-
-
 var gulp = require('gulp');
-var plugins = require('gulp-load-plugins');
-var requireDir = require('require-dir');
-
-plugins.sequence = require('run-sequence');
-plugins.browserify = require('browserify');
-plugins.source = require('vinyl-source-stream');
-plugins.buffer = require('vinyl-buffer');
-plugins.scss = require('gulp-sass');
-plugins.rename = require('gulp-rename');
-plugins.cleanCss = require('gulp-clean-css');
-plugins.uglify = require('gulp-uglify');
-plugins.replace = require('gulp-replace');
-
-var conf = {};
-
-(function () {
-    var confs = requireDir('tasks/conf');
-    for (var key in confs) {
-        confs[key](conf);
-    }
-})();
-
-(function () {
-    var build = requireDir('tasks/build');
-    for (var key in build) {
-        build[key](gulp, plugins, conf);
-    }
-})();
-
-(function(){
-    var build = requireDir('tasks/publish');
-    for (var key in build) {
-        build[key](gulp, plugins, conf);
-    }
-})();
+var fs = require('fs');
+var crypto = require('crypto');
+var loadfiles = require('./tasks/readFiles');
+var markdown = require('markdown-it')();
 
 
-//
-//readFile('tasks/conf', function (path) {
-//    require(path)(conf);
-//});
-//
-//readFile('tasks/build', function (path) {
-//    require(path)(gulp, plugins, conf);
-//});
-//
-//console.log(conf);
+var rename = require('gulp-rename');
 
+gulp.task('default', function () {
+    var reg_md = new RegExp('.md$');// 验证当前文件是md文件
+    var reg_name = new RegExp('(./data)(/.*/|/)(.*)(.md$)', 'i');//截取出文件名字
+    var reg_date = new RegExp('^(.{4})(.{2})(.{2})', 'i');//拆分日期 20161001 => [2016,10,01]
+    var md5 = crypto.createHash('md5');// 创建一个MD5加密对象
+    var template = fs.readFileSync('./pages/template.html', 'utf-8');// 获取wen'jian
+    var md5map = JSON.parse(fs.readFileSync('./pages/MD5MAP.json', 'utf-8'));
+    loadfiles('./data', function (path) {
+        if (reg_md.test(path)) {
+            var filename = path.match(reg_name)[3];
+            console.log('step1:' + filename);
+            filename = filename.match(reg_date).slice(1);
+            console.log('step2:' + filename);
+            filename = filename[0] + '年' + filename[1] + '月' + filename[2] + '日博客';
+            console.log('setp3:' + filename);
+            fs.readFile(path, 'utf-8', function (error, data) {
+                var context = markdown.render(data);
+                context = template.replace('{{code}}', context).replace('{{title}}', filename);
+                var hash = md5.update(context).digest('hex');
+                if (!(md5map[filename] && md5map[filename] == hash)) {
+                    fs.writeFile(path.replace('./data', './pages').replace(/.md$/g, '.html'), context, 'utf-8');
+                }
+            });
+        }
+    });
+});
 
-//
-//var conf = {};
-//
-//plugins.browserify = require('browserify');
-//plugins.scss = require('gulp-sass');
-//plugins.buffer = require('vinyl-buffer');
-//plugins.source = require('vinyl-source-stream');
-//plugins.sequence = require('run-sequence');
-//
-//var taskfiles = [
-//    './tasks/build'/*,
-//    './tasks/publish'*/
-//];
-//
-//invokeConfig(loadTasks('./tasks/conf'));
-//for (var i in taskfiles) {
-//    invokeTasks(loadTasks(taskfiles[i]));
-//}
-//
-//function loadTasks(relPath) {
-//    return includeAll({
-//            dirname: path.resolve(__dirname, relPath),
-//            filter: /(.+)\.js$/
-//        }) || {};
-//}
-//
-//function invokeTasks(tasks) {
-//    for (var taskName in tasks) {
-//        if (tasks.hasOwnProperty(taskName)) {
-//            tasks[taskName](gulp, plugins, conf);
-//        }
-//    }
-//}
-//function invokeConfig(tasks) {
-//    for (var taskName in tasks) {
-//        if (tasks.hasOwnProperty(taskName)) {
-//            conf = tasks[taskName](conf);
-//        }
-//    }
-//}
+gulp.task('rename', function () {
+    var reg = new RegExp('.*([0-9]{2}-[0-9]{2})@.{2}.png$', 'g');
+    var reg_name = new RegExp('(^.*)([0-9]{2}-[0-9]{2})(@.{2})(.png$)', 'i');
+    loadfiles('./images', function (path) {
+        if (reg.test(path)) {
+            var newname = path.match(reg_name);
+            newname = 'verify-' + newname[2].replace('-', 'x') +'.png';
+            gulp.src(path).pipe(rename(newname)).pipe(gulp.dest('./images'));
+        }
+    })
+});
