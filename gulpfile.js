@@ -156,13 +156,13 @@ function Page(path) {
         fs.writeFile(path.replace(_path_data, _path_pages).replace(/.md$/g, '.html'), _this.htmlContext, _charset);
     };
     this.destroy = function () {
-        var _path_data = null;
-        var _path_pages = null;
-        var reg_name = null;
-        var reg_date = null;
-        var _path = null;
-        var _this = null;
-        var _charset = null;
+        _path_data = null;
+        _path_pages = null;
+        reg_name = null;
+        reg_date = null;
+        _path = null;
+        _this = null;
+        _charset = null;
     };
     function getCname(filename) {
         var name = filename.match(reg_date).slice(1);
