@@ -89,7 +89,8 @@
 }
 
 .navbar menu li.active span {
-    background-color: #3f4b5d;
+    background-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), inset 0 0 2px 0 rgba(0, 0, 0, 0.25);
 }
 
 .navbar .calendar {
