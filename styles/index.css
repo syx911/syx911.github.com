@@ -1,3 +1,7 @@
+body {
+    background: #e8e8e8 url(../images/bkg.png);
+}
+
 .navbar {
     display: block;
     position: fixed;
@@ -5,6 +9,9 @@
     height: 100%;
     background-color: rgb(43, 51, 63);
     background-image: url(../images/bkg.png);
+    -webkit-box-shadow: 2px 0 4px 0 rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 2px 0 4px 0 rgba(0, 0, 0, 0.25);
+    box-shadow: 2px 0 4px 0 rgba(0, 0, 0, 0.25);
 }
 
 .navbar .info {
@@ -29,8 +36,9 @@
     width: 100%;
     height: 100%;
     padding: 10px;
-    border: solid 1px rgba(0, 0, 0, 0.25);
-    box-shadow: inset 0px 0px 1px 1px rgba(255, 255, 255, 0.075);
+    -webkit-box-shadow: inset 0 0 1px 1px rgba(255, 255, 255, 0.075);
+    -moz-box-shadow: inset 0 0 1px 1px rgba(255, 255, 255, 0.075);
+    box-shadow: inset 0 0 1px 1px rgba(255, 255, 255, 0.075);
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -176,6 +184,81 @@
 
 .content {
     height: 100%;
-    margin-left: 300px;
+    margin-left: 400px;
     margin-right: 0;
+    padding: 40px 50px;
+    box-shadow: -2px 0 2px 0 rgba(0, 0, 0, 0.25);
+    background: rgba(255, 255, 255, 1) url(../images/bkg.png);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
+
+.content article {
+    position: relative;
+    width: 100%;
+
+}
+
+.content article .title {
+    width: 100%;
+}
+
+.content article .title h1 {
+    width: 100%;
+    font-size: 52px;
+    color: #000;
+}
+
+.content article .title span {
+    display: block;
+    width: 100%;
+    font-size: 26px;
+    color: #b0b0b0;
+}
+
+.content article .context {
+    width: 100%;
+    font-size: 20px;
+    color: #2d2d2d;
+}
+
+.content article .article-info {
+    position: absolute;
+    width: 70px;
+    height: 180px;
+    top: 0;
+    left: -120px;
+    text-align: center;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    background: #fff url(../images/bkg.png);
+    -webkit-box-shadow: 3px 0 0 0 rgb(248, 248, 248), 0 0 2px 2px rgba(0, 0, 0, 0.33);
+    -moz-box-shadow: 3px 0 0 0 rgb(248, 248, 248), 0 0 2px 2px rgba(0, 0, 0, 0.33);
+    box-shadow: 3px 0 0 0 rgb(248, 248, 248), 0 0 2px 2px rgba(0, 0, 0, 0.33);
+    z-index: 2;
+}
+
+.content article .article-info .date {
+    width: 100%;
+    padding: 20px 10px 20px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.content article .article-info .date .month {
+    width: 100%;
+    height: 35px;
+    font-size: 27px;
+    color: #999;
+}
+
+.content article .article-info .date .day {
+    width: 100%;
+    height: 30px;
+    font-size: 24px;
+    color: #1b252a;
+    border-bottom: 1px solid #C8C8C8;
+}
+
